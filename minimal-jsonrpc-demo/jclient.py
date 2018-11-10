@@ -9,7 +9,7 @@ from bsonrpc.framing import (
 
 # Cut-the-corners TCP Client:
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(('localhost', 50001))
+s.connect(('localhost', 50002))
 
 rpc = JSONRpc(s,framing_cls=JSONFramingNone)
 server = rpc.get_peer_proxy()

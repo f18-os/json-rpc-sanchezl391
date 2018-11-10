@@ -8,23 +8,29 @@ from bsonrpc.exceptions import FramingError
 from bsonrpc.framing import (
 	JSONFramingNetstring, JSONFramingNone, JSONFramingRFC7464)
 
+dic = dict() # dictionary that will contain root
+
+# Iterates through root's children and increases values
+def recursiveIncrement(node):
+	node['val'] += 1
+	for child in node['children']:
+		recursiveIncrement(child)
 
 # Class providing functions for the client to use:
 @service_class
 class ServerServices(object):
 
+  # handles making dictionary from string and returning updated 
+  #   graph in string format
   @request
-  def swapper(self, txt):
-    return ''.join(reversed(list(txt)))
-
-  @request
-  def nop(self, txt):
-    print(txt)
-    return txt
+  def increment(self, graphStr):
+    dic = eval(graphStr)
+    recursiveIncrement(dic)
+    return str(dic)
 
 # Quick-and-dirty TCP Server:
 ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ss.bind(('localhost', 50002))
+ss.bind(('localhost', 50001))
 ss.listen(10)
 
 while True:
